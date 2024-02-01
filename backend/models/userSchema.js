@@ -70,3 +70,22 @@ UserSchema.statics.register = async function (
   });
   return user;
 };
+
+// Login method
+UserSchema.statics.login = async function (input, password) {
+  if (!input || !password) {
+    throw Error(`All fields need to be filled!`);
+  }
+  const userByUsername = this.findOne({ userName: input });
+  const userByEmail = this.findOne({ email: input });
+  const user = userByUsername || userByEmail;
+  if (!user) {
+    throw Error(`User not found!`);
+  }
+
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+  if (!isPasswordMatch) {
+    throw Error(`Incorrect password!`);
+  }
+  return user;
+};
