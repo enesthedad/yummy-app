@@ -1,9 +1,9 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import validator from "validator";
 
-const Schema = mongoose.Schema();
+const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
   email: {
@@ -89,3 +89,7 @@ UserSchema.statics.login = async function (input, password) {
   }
   return user;
 };
+
+const User = mongoose.model("User", UserSchema);
+
+export default User;
