@@ -43,7 +43,7 @@ UserSchema.statics.register = async function (
   if (!email || !password || !userName || !fullName) {
     throw Error(`All fields need to be filled!`);
   }
-  if (!validator(email)) {
+  if (!validator.isEmail(email)) {
     throw Error(`${email} is not a valid email address`);
   }
   if (!validator.isStrongPassword(password)) {
@@ -52,10 +52,10 @@ UserSchema.statics.register = async function (
   const usernameExists = await this.findOne({ userName });
   const emailExists = await this.findOne({ email });
 
-  if (email) {
+  if (emailExists) {
     throw Error(`You have already an account`);
   }
-  if (userName) {
+  if (usernameExists) {
     throw Error(`Username already taken please choose a different username!`);
   }
 
@@ -76,8 +76,8 @@ UserSchema.statics.login = async function (input, password) {
   if (!input || !password) {
     throw Error(`All fields need to be filled!`);
   }
-  const userByUsername = this.findOne({ userName: input });
-  const userByEmail = this.findOne({ email: input });
+  const userByUsername = await this.findOne({ userName: input });
+  const userByEmail = await this.findOne({ email: input });
   const user = userByUsername || userByEmail;
   if (!user) {
     throw Error(`User not found!`);
