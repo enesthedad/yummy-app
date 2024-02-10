@@ -37,3 +37,20 @@ export const loginUser = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+export const getUser = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const user = await User.findById(id);
+    res.status(200).json({
+      success: true,
+      message: `User have found`,
+      data: user,
+    });
+    return user;
+  } catch (error) {
+    res.status(200).json({
+      success: false,
+      message: error,
+    });
+  }
+};
